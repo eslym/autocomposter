@@ -10,12 +10,11 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import org.jetbrains.annotations.NotNull;
@@ -78,7 +77,7 @@ public class PowerComposterBlockEntity extends AutoComposterBlockEntity implemen
         float chance = super.getChance(item);
         if(fluid.getFluidAmount() >= WATER_COST){
             fluid.drain(WATER_COST, IFluidHandler.FluidAction.EXECUTE);
-            chance *= 1.1;
+            chance *= 1.1F;
         }
         return chance;
     }
@@ -86,10 +85,10 @@ public class PowerComposterBlockEntity extends AutoComposterBlockEntity implemen
     @NotNull
     @Override
     public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, Direction side) {
-        if(cap == CapabilityEnergy.ENERGY){
+        if(cap == ForgeCapabilities.ENERGY){
             return lazyEnergy.cast();
         }
-        if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
+        if (cap == ForgeCapabilities.FLUID_HANDLER){
             return lazyFluid.cast();
         }
         return super.getCapability(cap, side);

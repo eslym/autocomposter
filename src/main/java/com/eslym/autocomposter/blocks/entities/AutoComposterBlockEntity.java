@@ -18,13 +18,14 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 
+@SuppressWarnings("ClassEscapesDefinedScope")
 public class AutoComposterBlockEntity extends BlockEntity {
 
     protected static final String TAG_CONSUME_CD = "consumeCoolDown";
@@ -116,7 +117,7 @@ public class AutoComposterBlockEntity extends BlockEntity {
         if (transferCoolDown > 0) return;
         BlockEntity be = world.getBlockEntity(pos.above());
         if (be == null) return;
-        LazyOptional<IItemHandler> cap = be.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.DOWN);
+        LazyOptional<IItemHandler> cap = be.getCapability(ForgeCapabilities.ITEM_HANDLER, Direction.DOWN);
         cap.ifPresent((handler) -> {
             for (int i = 0; i < handler.getSlots(); i++) {
                 ItemStack extracted = handler.extractItem(i, 1, true);
@@ -135,7 +136,7 @@ public class AutoComposterBlockEntity extends BlockEntity {
         if (transferCoolDown > 0) return;
         BlockEntity be = world.getBlockEntity(pos.below());
         if (be == null) return;
-        LazyOptional<IItemHandler> cap = be.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.DOWN);
+        LazyOptional<IItemHandler> cap = be.getCapability(ForgeCapabilities.ITEM_HANDLER, Direction.DOWN);
         cap.ifPresent((handler) -> {
             for (int i = 5; i < 10; i++) {
                 ItemStack extracted = contents.extractItem(i, 1, true);
@@ -184,7 +185,7 @@ public class AutoComposterBlockEntity extends BlockEntity {
     @NotNull
     @Override
     public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, Direction side) {
-        if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+        if (cap == ForgeCapabilities.ITEM_HANDLER) {
             return lazyItemHandler.cast();
         }
         return super.getCapability(cap, side);
